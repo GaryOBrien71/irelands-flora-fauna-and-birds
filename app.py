@@ -1002,7 +1002,7 @@ def species_detail(row: pd.Series, state: dict) -> None:
     img_col, text_col = st.columns([1, 1.55], vertical_alignment="top")
 
     with img_col:
-        st.image(species_image(row), use_container_width=True)
+        st.image(species_image(row), width="stretch")
         if spotted_default:
             st.success("✅ Spotted")
         else:
@@ -1097,7 +1097,7 @@ def species_detail(row: pd.Series, state: dict) -> None:
             with cols[i % 3]:
                 img = image_from_file(p.get("photo_url", ""))
                 if img:
-                    st.image(img, use_container_width=True)
+                    st.image(img, width="stretch")
                 if p.get("caption"):
                     st.caption(p["caption"])
 
@@ -1238,7 +1238,7 @@ def sightings_page(df: pd.DataFrame, state: dict) -> None:
         with cols[i % 2]:
             img = image_from_file(photo.get("photo_url", ""))
             if img:
-                st.image(img, use_container_width=True)
+                st.image(img, width="stretch")
             st.markdown(f"**{species_lookup.get(photo.get('species_id'), photo.get('species_id'))}**")
             if photo.get("caption"):
                 st.caption(photo["caption"])
@@ -1288,7 +1288,7 @@ def data_page(df: pd.DataFrame) -> None:
     )
 
     with st.expander("Species table preview"):
-        st.dataframe(df, use_container_width=True, hide_index=True)
+        st.dataframe(df, width="stretch", hide_index=True)
 
 
 def about_page() -> None:
