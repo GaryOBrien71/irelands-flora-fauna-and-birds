@@ -478,7 +478,7 @@ def inject_css() -> None:
         div[data-testid="stHorizontalBlock"] button[kind="secondary"] {
             background: transparent !important;
             border: none !important;
-            color: #ffffff !important;
+            color: #446c1f !important;
             box-shadow: none !important;
             padding: 0.15rem 0.2rem !important;
             min-height: 1.4rem !important;
@@ -487,7 +487,7 @@ def inject_css() -> None:
         }
 
         div[data-testid="stHorizontalBlock"] button[kind="secondary"] p {
-            color: #ffffff !important;
+            color: #446c1f !important;
             font-size: 1rem !important;
             font-weight: 800 !important;
             text-align: left !important;
