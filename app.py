@@ -1239,7 +1239,7 @@ def browse_page(df: pd.DataFrame, state: dict) -> None:
         st.warning("No records match those filters.")
         return
 
-    page_size = st.selectbox("Records per page", [5, 10, 20, 50], index=1)
+    page_size = st.selectbox("Records per page", [5, 10, 20, 50], index=3)
     total_pages = max(1, (len(result) + page_size - 1) // page_size)
     page = st.number_input("Page", min_value=1, max_value=total_pages, value=1, step=1)
     start = (page - 1) * page_size
