@@ -103,43 +103,6 @@ def inject_css() -> None:
             padding: 0 1rem 2rem 1rem;
         }
 
-        .top-nav {
-            position: sticky;
-            top: 0;
-            z-index: 999999;
-            width: 100%;
-            margin: 0;
-            padding: 0.78rem 1.1rem;
-            background: #446c1f;
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 0.35rem 1.05rem;
-            box-shadow: 0 4px 12px rgba(35, 60, 18, 0.18);
-            border-radius: 0;
-        }
-
-        .top-nav a {
-            color: #ffffff !important;
-            text-decoration: none !important;
-            font-weight: 750;
-            font-size: 1rem;
-            line-height: 1.1;
-            padding: 0.05rem 0;
-            display: inline-block;
-            border-radius: 0;
-            white-space: nowrap;
-        }
-
-        .top-nav a:hover {
-            text-decoration: underline !important;
-            text-underline-offset: 0.22rem;
-        }
-
-        .top-nav a.active {
-            text-decoration: underline !important;
-            text-underline-offset: 0.22rem;
-        }
 
         /* Remove any accidental old radio nav if an old browser cache ever renders it */
         .nav-radio,
@@ -485,6 +448,80 @@ def inject_css() -> None:
             }
         }
 
+        
+        .top-nav-shell {
+            position: sticky;
+            top: 0;
+            z-index: 999999;
+            width: 100%;
+            margin: 0;
+            padding: 0.55rem 1.1rem;
+            background: #446c1f;
+            box-shadow: 0 4px 12px rgba(35, 60, 18, 0.18);
+        }
+
+        .top-nav-shell + div {
+            background: #446c1f;
+        }
+
+        /* Style the Streamlit buttons inside the top nav to look like website text links */
+        .top-nav-shell ~ div[data-testid="stHorizontalBlock"],
+        .top-nav-shell + div[data-testid="stHorizontalBlock"] {
+            background: #446c1f;
+            margin-top: -0.55rem;
+            padding: 0 1.1rem 0.55rem 1.1rem;
+            position: sticky;
+            top: 0;
+            z-index: 999999;
+        }
+
+        div[data-testid="stHorizontalBlock"] button[kind="secondary"] {
+            background: transparent !important;
+            border: none !important;
+            color: #ffffff !important;
+            box-shadow: none !important;
+            padding: 0.15rem 0.2rem !important;
+            min-height: 1.4rem !important;
+            font-weight: 800 !important;
+            text-align: left !important;
+        }
+
+        div[data-testid="stHorizontalBlock"] button[kind="secondary"] p {
+            color: #ffffff !important;
+            font-size: 1rem !important;
+            font-weight: 800 !important;
+            text-align: left !important;
+        }
+
+        div[data-testid="stHorizontalBlock"] button[kind="secondary"]:hover {
+            text-decoration: underline !important;
+            background: rgba(255,255,255,0.08) !important;
+        }
+
+        /* Remove any old radio nav if a stale cached page ever tries to render it */
+        .nav-radio,
+        div[role="radiogroup"] {
+            display: none !important;
+        }
+
+        
+        @media (max-width: 740px) {
+            .top-nav-shell {
+                padding: 0.5rem 0.65rem;
+            }
+
+            .top-nav-shell ~ div[data-testid="stHorizontalBlock"],
+            .top-nav-shell + div[data-testid="stHorizontalBlock"] {
+                overflow-x: auto;
+                flex-wrap: nowrap;
+                padding: 0 0.65rem 0.5rem 0.65rem;
+            }
+
+            div[data-testid="stHorizontalBlock"] button[kind="secondary"] p {
+                font-size: .88rem !important;
+            }
+        }
+
         </style>
         """,
         unsafe_allow_html=True,
@@ -493,19 +530,26 @@ def inject_css() -> None:
 
 
 def render_navbar(current_page: str) -> None:
-    links = [
+    pages = [
         ("home", "Home"),
         ("browse", "Browse"),
         ("my-sightings", "My sightings"),
         ("data-setup", "Data setup"),
         ("about", "About"),
     ]
-    html = ['<nav class="top-nav">']
-    for slug, label in links:
-        active = "active" if current_page == slug else ""
-        html.append(f'<a class="{active}" href="?page={slug}" target="_self">{label}</a>')
-    html.append("</nav>")
-    st.markdown("".join(html), unsafe_allow_html=True)
+
+    st.markdown('<div class="top-nav-shell">', unsafe_allow_html=True)
+    cols = st.columns([1, 1, 1.35, 1.35, 1], gap="small")
+
+    for col, (slug, label) in zip(cols, pages):
+        with col:
+            is_active = current_page == slug
+            button_label = f"● {label}" if is_active else label
+            if st.button(button_label, key=f"nav_{slug}", use_container_width=True):
+                st.query_params["page"] = slug
+                st.rerun()
+
+    st.markdown("</div>", unsafe_allow_html=True)
 
 
 def hero() -> None:
